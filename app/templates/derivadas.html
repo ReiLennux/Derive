@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Derivadas</title>
+    <!-- MathJax para renderizar LaTeX -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Calculadora de Derivadas</h1>
+    
+    <form action="{{ url_for('derivada.derivatives_page') }}" method="POST">
+        <label for="expression">Expresión:</label>
+        <input type="text" id="expression" name="expression" required>
+        
+        <label for="x_value">Valor de x:</label>
+        <input type="number" id="x_value" name="x_val" step="any" required>
+        
+        <button type="submit">Calcular</button>
+    </form>
+
+    {% if result and not result.error %}
+        <h2>Resultado:</h2>
+        <p>Expresión original: \( {{ result.expresion_original | safe }} \)</p>
+        <p>Derivada: \( {{ result.derivada | safe }} \)</p>
+        <p>Valor en x = {{ result.x_val }}: \( {{ result.valor_evaluado.evalf(3) }} \)</p>
+    {% elif result and result.error %}
+        <div class="error">{{ result.error }}</div>
+    {% endif %}
+
+    <a href="{{ url_for('calculator.index') }}">Volver</a>
+</body>
+</html>
