@@ -1,3 +1,5 @@
 Flask
 latex2sympy
 simpy
+numpy
+matplotlib

@@ -1,35 +1,378 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Derivadas</title>
-    <!-- MathJax para renderizar LaTeX -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-</head>
-<body>
-    <h1>Calculadora de Derivadas</h1>
-    
-    <form action="{{ url_for('derivada.derivatives_page') }}" method="POST">
-        <label for="expression">Expresión:</label>
-        <input type="text" id="expression" name="expression" required>
-        
-        <label for="x_value">Valor de x:</label>
-        <input type="number" id="x_value" name="x_val" step="any" required>
-        
-        <button type="submit">Calcular</button>
-    </form>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Calculadora de Derivadas</title>
+        <!-- MathJax para renderizar LaTeX -->
+        <script
+            src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script
+            id="MathJax-script"
+            async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <!-- Bootstrap CSS -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+            rel="stylesheet" />
+        <!-- Tailwind CSS (opcional si deseas combinar estilos) -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Bootstrap JS -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body class="bg-light">
+        <div class="container py-5">
+            <!-- Título -->
+            <header class="mb-5 text-center">
+                <h1 class="display-4 text-primary">Calculadora de Derivadas</h1>
+            </header>
 
-    {% if result and not result.error %}
-        <h2>Resultado:</h2>
-        <p>Expresión original: \( {{ result.expresion_original | safe }} \)</p>
-        <p>Derivada: \( {{ result.derivada | safe }} \)</p>
-        <p>Valor en x = {{ result.x_val }}: \( {{ result.valor_evaluado.evalf(3) }} \)</p>
-    {% elif result and result.error %}
-        <div class="error">{{ result.error }}</div>
-    {% endif %}
+            <div class="row">
+                <!-- Formulario -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <form
+                                action="{{ url_for('derivada.derivatives_page') }}"
+                                method="POST">
+                                <div class="mb-3">
+                                    <label for="expression"
+                                        class="form-label fw-bold">Expresión:</label>
+                                    <input
+                                        type="text"
+                                        id="expression"
+                                        name="expression"
+                                        required
+                                        class="form-control" />
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="x_value"
+                                            class="form-label fw-bold">Valor de
+                                            x:</label>
+                                        <input
+                                            type="number"
+                                            id="x_value"
+                                            name="x_val"
+                                            step="any"
+                                            required
+                                            class="form-control" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="h_value"
+                                            class="form-label fw-bold">Valor de
+                                            h:</label>
+                                        <input
+                                            type="number"
+                                            id="h_value"
+                                            name="h_val"
+                                            step="any"
+                                            required
+                                            class="form-control" />
+                                    </div>
+                                </div>
+                                <button type="submit"
+                                    class="btn btn-primary w-100">
+                                    Calcular
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tabs informativos -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <ul class="nav nav-tabs" id="infoTabs"
+                                role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button
+                                        class="nav-link active"
+                                        id="tab1"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#content1"
+                                        type="button"
+                                        role="tab">
+                                        ¿Qué hace la calculadora?
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button
+                                        class="nav-link"
+                                        id="tab2"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#content2"
+                                        type="button"
+                                        role="tab">
+                                        ¿Cómo se usa?
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button
+                                        class="nav-link"
+                                        id="tab3"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#content3"
+                                        type="button"
+                                        role="tab">
+                                        Más información
+                                    </button>
+                                </li>
+                            </ul>
+                            <div class="tab-content mt-3" id="infoTabsContent">
+                                <div class="tab-pane fade show active"
+                                    id="content1" role="tabpanel">
+                                    <div class="container my-4">
+                                        <div class="row align-items-center">
+                                            <!-- Imagen ilustrativa -->
+                                            <div class="col-md-4 text-center">
+                                                <img src="../../dprogresiva.png"
+                                                    alt="Fórmulas de derivadas"
+                                                    class="img-fluid"
+                                                    style="max-width: 200px;">
+                                                <img src="../../dregresiva.png"
+                                                    alt="Fórmulas de derivadas"
+                                                    class="img-fluid"
+                                                    style="max-width: 200px;">
+                                                <img src="../../dcentral.png"
+                                                    alt="Fórmulas de derivadas"
+                                                    class="img-fluid"
+                                                    style="max-width: 200px;">
+                                            </div>
+                                            <!-- Texto descriptivo -->
+                                            <div class="col-md-8">
+                                                <p class>
+                                                    Esta calculadora te permite
+                                                    obtener la derivada de
+                                                    funciones matemáticas de
+                                                    manera rápida y precisa. Es
+                                                    una herramienta ideal para
+                                                    estudiantes y profesionales
+                                                    que necesitan resolver
+                                                    problemas de cálculo
+                                                    diferencial con facilidad.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
 
-    <a href="{{ url_for('calculator.index') }}">Volver</a>
-</body>
-</html>
+                                </div>
+                                <div class="tab-pane fade" id="content2"
+                                    role="tabpanel">
+                                    <p>Ingresa la expresión y los valores de x y
+                                        h; luego presiona el botón
+                                        "Calcular".</p>
+                                </div>
+                                <div class="tab-pane fade" id="content3"
+                                    role="tabpanel">
+                                    <div class="container my-4">
+                                        <div class="row align-items-center">
+                                            <!-- Información textual -->
+                                            <div class="col-md-8">
+                                                <p class="mb-1">
+                                                    Creado por:
+                                                    <strong>Lenny D. Reyes
+                                                        Monroy</strong>,
+                                                    <strong>Kury J. Centeno
+                                                        Muciño</strong>,
+                                                    <strong>Brandon Fuentes
+                                                        Micete</strong>
+                                                </p>
+                                                <p class="mb-1">
+                                                    Para la Materia:
+                                                    <em>Matemáticas para la
+                                                        Ingeniería II</em>
+                                                </p>
+                                                <p class="mb-1">
+                                                    Carrera: <em>Ingeniería en
+                                                        Desarrollo y Gestión de
+                                                        Software</em>
+                                                </p>
+                                                <p class="mb-0">Universidad
+                                                    Tecnológica Tula-Tepeji</p>
+                                            </div>
+                                            <!-- Logo de la Universidad -->
+                                            <div class="col-md-4 text-center">
+                                                <img src="ruta-del-logo.jpg"
+                                                    alt="Logo Universidad"
+                                                    class="img-fluid"
+                                                    style="max-width: 150px;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resultados -->
+                {% if result and not result.error %}
+                <section class="mt-5">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h2 class="h4 mb-4 text-center">Resultado</h2>
+
+                            <!-- Tabla de expresiones -->
+                            <div class="table-responsive mb-4">
+                                <table class="table table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Descripción</th>
+                                            <th>Expresión</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Expresión Original</td>
+                                            <td>\( {{ result.expresion_original
+                                                | safe }} \)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Derivada Exacta</td>
+                                            <td>\( {{ result.derivada_exacta |
+                                                safe }} \)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Sección de resultados en dos bloques -->
+                            <div class="row">
+                                <!-- Tabla de derivadas -->
+                                <div class="col-md-6 mb-4">
+                                    <h3 class="h5 mb-3 text-center">Tabla de
+                                        Derivadas</h3>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Derivada</th>
+                                                    <th>Valor</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Derivada Exacta en \( x
+                                                        = {{ result.x_val }}
+                                                        \)</td>
+                                                    <td>{{
+                                                        result.valor_derivada_exacta
+                                                        }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Derivada Progresiva</td>
+                                                    <td>{{
+                                                        result.derivada_adelante
+                                                        }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Derivada Regresiva</td>
+                                                    <td>{{ result.derivada_atras
+                                                        }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Derivada Centrada</td>
+                                                    <td>{{
+                                                        result.derivada_centrada
+                                                        }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- Tabla de errores relativos -->
+                                <div class="col-md-6 mb-4">
+                                    <h3 class="h5 mb-3 text-center">Errores
+                                        Relativos</h3>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Derivada</th>
+                                                    <th>Error Relativo</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Progresiva</td>
+                                                    <td>{{ result.error_adelante
+                                                        }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Regresiva</td>
+                                                    <td>{{ result.error_atras
+                                                        }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Centrada</td>
+                                                    <td>{{ result.error_centrada
+                                                        }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="mt-3 text-center">
+                                        <h3 class="h6">Método con menor
+                                            error</h3>
+                                        <p>
+                                            El método que se acerca más a la
+                                            derivada exacta es:
+                                            <strong class="text-primary">{{
+                                                result.metodo_menor_error
+                                                }}</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+                {% elif result and result.error %}
+                <div class="alert alert-danger mt-4">
+                    <strong>Error:</strong> {{ result.error }}
+                </div>
+                {% endif %}
+
+                <!-- Gráfica de la función (si existe) -->
+                {% if result and result.graph_html %}
+                <section class="mt-5">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h3 class="h5 mb-4">Gráfica de la Función</h3>
+                            <div id="graph-container">
+                                {{ result.graph_html | safe }}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <script>
+        window.onload = function() {
+          var ggbApp = new GGBApplet({
+            appName: "graphing",
+            showToolBar: false,
+            showAlgebraInput: false,
+            showMenuBar: false,
+            language: "es",
+            height: 500,
+            width: 500
+          }, true);
+          ggbApp.inject('graph-container');
+          // Pasar la expresión original desde el resultado
+          var expression = "{{ result.expresion_original | safe }}";
+          ggbApp.evalCommand('f(x) = ' + "2x");
+        };
+      </script>
+                {% endif %}
+
+                <!-- Enlace para volver -->
+                <div class="text-center mt-5">
+                    <a href="/"
+                        class="text-primary text-decoration-underline">Volver</a>
+                </div>
+            </div>
+        </body>
+    </html>
