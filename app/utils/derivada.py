@@ -1,3 +1,7 @@
+# Configurar el backend de Matplotlib antes de cualquier importación de Matplotlib
+import matplotlib
+matplotlib.use('Agg')  # Usar el backend 'Agg' para evitar GUI
+
 from sympy import symbols, sympify, diff, latex, lambdify
 import re
 import numpy as np
