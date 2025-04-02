@@ -7,7 +7,7 @@ import base64
 from sympy import symbols, sympify, diff, latex, lambdify, E, log
 import re
 
-def diferencias_finitas(expr_str, x0, h):
+def diferencias_finitas(expr_str, x0, h, decimales=None):  # Añadido parámetro decimales
     try:
         # Reemplaza el operador de potencia '^' por '**'
         expr_str = expr_str.replace('^', '**')
@@ -51,6 +51,12 @@ def diferencias_finitas(expr_str, x0, h):
             error_atras = abs((derivada_atras.evalf() - exact_val) / exact_val)
             error_centrada = abs((derivada_centrada.evalf() - exact_val) / exact_val)
         
+        # Función para aplicar redondeo si decimales tiene valor
+        def redondear(valor):
+            if decimales is not None:
+                return round(float(valor), decimales)
+            return valor
+        
         # Determinar el método con menor error
         errors = {"Progresiva": error_adelante, "Regresiva": error_atras, "Central": error_centrada}
         min_error_method = min(errors, key=errors.get)
@@ -82,17 +88,17 @@ def diferencias_finitas(expr_str, x0, h):
         graph_data = base64.b64encode(buf.getvalue()).decode("utf-8")
         plt.close()
         
-        # Retornar los resultados con la gráfica
+        # Retornar los resultados con la gráfica (aplicando redondeo si es necesario)
         return {
             "expresion_original": latex(expr),
             "derivada_exacta": latex(deriv_exacta_expr),
-            "valor_derivada_exacta": exact_val,
-            "derivada_adelante": derivada_adelante.evalf(),
-            "derivada_atras": derivada_atras.evalf(),
-            "derivada_centrada": derivada_centrada.evalf(),
-            "error_adelante": error_adelante,
-            "error_atras": error_atras,
-            "error_centrada": error_centrada,
+            "valor_derivada_exacta": redondear(exact_val),
+            "derivada_adelante": redondear(derivada_adelante.evalf()),
+            "derivada_atras": redondear(derivada_atras.evalf()),
+            "derivada_centrada": redondear(derivada_centrada.evalf()),
+            "error_adelante": redondear(error_adelante),
+            "error_atras": redondear(error_atras),
+            "error_centrada": redondear(error_centrada),
             "metodo_menor_error": min_error_method,
             "x_val": x0,
             "graph_html": f'<img src="data:image/png;base64,{graph_data}" alt="Gráfica de la función y su derivada"/>'
