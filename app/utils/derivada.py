@@ -52,7 +52,7 @@ def diferencias_finitas(expr_str, x0, h):
             error_centrada = abs((derivada_centrada.evalf() - exact_val) / exact_val)
         
         # Determinar el método con menor error
-        errors = {"Adelante": error_adelante, "Atras": error_atras, "Centrada": error_centrada}
+        errors = {"Progresiva": error_adelante, "Regresiva": error_atras, "Central": error_centrada}
         min_error_method = min(errors, key=errors.get)
         
         # Generar la gráfica

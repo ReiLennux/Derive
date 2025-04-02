@@ -44,6 +44,7 @@
                                         id="expression"
                                         name="expression"
                                         required
+                                        placeholder="Ej. x^2+sqrt(3x)"
                                         class="form-control" />
                                 </div>
                                 <div class="row">
@@ -57,6 +58,7 @@
                                             name="x_val"
                                             step="any"
                                             required
+                                            placeholder="10"
                                             class="form-control" />
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -69,6 +71,7 @@
                                             name="h_val"
                                             step="any"
                                             required
+                                            placeholder="Ej 0.01"
                                             class="form-control" />
                                     </div>
                                 </div>
@@ -88,7 +91,7 @@
                                 role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <button
-                                        class="nav-link active"
+                                        class="nav-link"
                                         id="tab1"
                                         data-bs-toggle="tab"
                                         data-bs-target="#content1"
@@ -99,7 +102,7 @@
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button
-                                        class="nav-link"
+                                        class="nav-link active"
                                         id="tab2"
                                         data-bs-toggle="tab"
                                         data-bs-target="#content2"
@@ -125,25 +128,25 @@
                                     id="content1" role="tabpanel">
                                     <div class="container my-4">
                                         <div class="row align-items-center">
-                                            <h2 class="fs-6">Formulario</h2>
+                                            <h2 class="fs-6 fw-bold">Formulario</h2>
                                             <!-- Imagen ilustrativa -->
                                             <div class="col-md-4">
                                                 <div class="mb-2">
-                                                    <p class="small fw-bold">Progresiva</p>
+                                                    <p class="small">Progresiva</p>
                                                     <img src="{{ url_for('static', filename='img/dprogresiva.png') }}" 
                                                          alt="Fórmula de derivada progresiva" 
                                                          class="img-fluid" 
                                                          style="max-width: 150px;">
                                                 </div>
                                                 <div class="mb-1">
-                                                    <p class="small fw-bold">Regresiva</p>
+                                                    <p class="small">Regresiva</p>
                                                     <img src="{{ url_for('static', filename='img/dregresiva.png') }}" 
                                                          alt="Fórmula de derivada regresiva" 
                                                          class="img-fluid" 
                                                          style="max-width: 150px;">
                                                 </div>
                                                 <div class="mb-1">
-                                                    <p class="small fw-bold">Central</p>
+                                                    <p class="small">Central</p>
                                                     <img src="{{ url_for('static', filename='img/dcentral.png') }}" 
                                                          alt="Fórmula de derivada central" 
                                                          class="img-fluid" 
@@ -173,7 +176,11 @@
                                     role="tabpanel">
                                     <p>Ingresa la expresión y los valores de x y
                                         h; luego presiona el botón
-                                        "Calcular".</p>
+                                        "Calcular".
+                                    </p>
+                                    <p>
+                                        La derivada de la funcion debe contener al menos una x. 
+                                    </p>
                                 </div>
                                 <div class="tab-pane fade" id="content3"
                                     role="tabpanel">
@@ -285,7 +292,7 @@
                                                         }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Derivada Centrada</td>
+                                                    <td>Derivada Central</td>
                                                     <td>{{
                                                         result.derivada_centrada
                                                         }}</td>
@@ -318,7 +325,7 @@
                                                         }}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Centrada</td>
+                                                    <td>Central</td>
                                                     <td>{{ result.error_centrada
                                                         }}</td>
                                                 </tr>
